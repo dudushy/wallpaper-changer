@@ -48,7 +48,7 @@
             this.buttonBrowseFiles.TabIndex = 0;
             this.buttonBrowseFiles.Text = "Browse files...";
             this.buttonBrowseFiles.UseVisualStyleBackColor = false;
-            this.buttonBrowseFiles.Click += new System.EventHandler(this.button1_Click);
+            this.buttonBrowseFiles.Click += new System.EventHandler(this.buttonBrowseFiles_Click);
             // 
             // labelPath
             // 
@@ -72,6 +72,7 @@
             this.buttonApply.TabIndex = 4;
             this.buttonApply.Text = "Apply Wallpaper";
             this.buttonApply.UseVisualStyleBackColor = false;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
             // pictureBox1
             // 
@@ -97,7 +98,7 @@
             this.Name = "FormWallpaperChanger";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Wallpaper Changer";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.FormWallpaperChanger_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
