@@ -18,7 +18,7 @@ namespace WallpaperChanger
         private static readonly int SPIF_UPDATEINIFILE = 0x01;
         private static readonly int SPIF_SENDWININICHANGE = 0x02;
 
-        Bitmap currentWallpaper = new Bitmap(GetDesktopWallpaper());
+        string initialWallpaper = GetDesktopWallpaper();
 
         bool undoWallpaper = false;
 
@@ -41,28 +41,6 @@ namespace WallpaperChanger
         {
             Console.WriteLine("path: ", path);
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, path, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
-        }
-
-        private static string CreateTmpFile()
-        {
-            string fileName = string.Empty;
-
-            try
-            {
-                fileName = Path.GetTempFileName();
-
-                FileInfo fileInfo = new FileInfo(fileName);
-
-                fileInfo.Attributes = FileAttributes.Temporary;
-
-                Console.WriteLine("temp file: " + fileName);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            return fileName;
         }
 
         private void buttonBrowseFiles_Click(object sender, EventArgs e)
@@ -101,27 +79,43 @@ namespace WallpaperChanger
         {
             Console.WriteLine("FormWallpaperChanger_Load");
 
-            pictureBox1.Image = currentWallpaper;
+            MessageBox.Show(GetDesktopWallpaper());
+
+            pictureBox1.Image = new Bitmap(initialWallpaper);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
         private void buttonApply_Click(object sender, EventArgs e)
         {
-            if (undoWallpaper)
-            {
-                SetDesktopWallpaper(currentWallpaper.ToString());
-                return;
-            }
-
             if (labelPath.Text == "--") {
                 MessageBox.Show("No image selected.");
 
                 return;
             };
 
+
+            if (undoWallpaper)
+            {
+                SetDesktopWallpaper(initialWallpaper);
+
+                undoWallpaper = false;
+
+                buttonApply.BackColor = Color.Lime;
+                buttonApply.ForeColor = Color.Black;
+                buttonApply.Text = "Apply Wallpaper";
+
+                MessageBox.Show("Wallpaper restored!");
+
+                return;
+            }
+
             SetDesktopWallpaper(labelPath.Text);
 
             undoWallpaper = true;
+
+            buttonApply.BackColor = Color.Red;
+            buttonApply.ForeColor = Color.White;
+            buttonApply.Text = "Restore Wallpaper";
 
             MessageBox.Show("Wallpaper applied!");
         }
