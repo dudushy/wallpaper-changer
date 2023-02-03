@@ -1,4 +1,8 @@
+using HtmlAgilityPack;
+using System.Diagnostics;
+using System.Net;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace WallpaperChanger
 {
@@ -15,25 +19,72 @@ namespace WallpaperChanger
         string initialWallpaperPath = GetDesktopWallpaper();
 
         bool undoWallpaper = false;
-        bool selectedWallpaper = false;
+        int selectedWallpaper = 0;
 
         static string GetDesktopWallpaper()
         {
             string wallpaper = new string('\0', 260);
-            Console.WriteLine("wallpaper: ", wallpaper);
+            Debug.WriteLine($"wallpaper: {wallpaper}");
 
             SystemParametersInfo(0x73, (int)wallpaper.Length, wallpaper, 0);
 
             var result = wallpaper.Substring(0, wallpaper.IndexOf('\0'));
-            Console.WriteLine("result: ", result);
+            Debug.WriteLine($"result: {result}");
 
             return result;
         }
 
         static void SetDesktopWallpaper(string path)
         {
-            Console.WriteLine("path: ", path);
+            Debug.WriteLine($"path: {path}");
             SystemParametersInfo(0x14, 0, path, 0x01 | 0x02);
+        }
+
+        private List<string> GetImagesInHTMLString(string htmlString)
+        {
+            List<string> images = new List<string>();
+            string pattern = @"<(img)\b[^>]*>";
+            Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
+            MatchCollection matches = rgx.Matches(htmlString);
+
+            for (int i = 0, l = matches.Count; i < l; i++)
+            {
+                images.Add(matches[i].Value);
+            }
+            return images;
+        }
+
+        void searchGoogle(string query)
+        {
+            Debug.WriteLine($"query: {query}");
+
+            var htmlDocument = new HtmlWeb().Load("https://www.google.com/search?q=+" + query + "&tbm=isch");
+            var list = GetImagesInHTMLString(htmlDocument.Text);
+
+            for (int i = 0; i == 3; i++)
+            {
+                var str = list[i];
+                string pattern = @"(https://.*);";
+                Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
+                Match matches = rgx.Match(str);
+                string path = matches.Groups[1].Value;
+                var imageStream = HttpWebRequest.Create(path).GetResponse().GetResponseStream();
+
+                switch (i)
+                {
+                    case 0:
+                        pictureBoxPreview1.Image = Image.FromStream(imageStream);
+                        break;
+                    case 1:
+                        pictureBoxPreview2.Image = Image.FromStream(imageStream);
+                        break;
+                    case 2:
+                        pictureBoxPreview3.Image = Image.FromStream(imageStream);
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private void buttonBrowseFiles_Click(object sender, EventArgs e)
@@ -50,7 +101,7 @@ namespace WallpaperChanger
                     if (openFileDialog1.CheckFileExists)
                     {
                         string path = System.IO.Path.GetFullPath(openFileDialog1.FileName);
-                        Console.WriteLine("path: ", path);
+                        Debug.WriteLine($"path: {path}");
 
                         labelPath.Text = path;
                         pictureBox1.Image = new Bitmap(openFileDialog1.FileName);
@@ -70,7 +121,7 @@ namespace WallpaperChanger
 
         private void FormWallpaperChanger_Load(object sender, EventArgs e)
         {
-            Console.WriteLine("FormWallpaperChanger_Load");
+            Debug.WriteLine("FormWallpaperChanger_Load");
 
             MessageBox.Show(GetDesktopWallpaper());
 
@@ -111,6 +162,25 @@ namespace WallpaperChanger
             buttonApply.Text = "Restore Wallpaper";
 
             MessageBox.Show("Wallpaper applied!");
+        }
+
+        private void textBoxSearch_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                searchGoogle(textBoxSearch.Text);
+                buttonClear.Enabled = true;
+                MessageBox.Show("Pressed enter.");
+            }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            buttonClear.Enabled = false;
+            pictureBoxPreview1.Image = null;
+            pictureBoxPreview2.Image = null;
+            pictureBoxPreview3.Image = null;
+            textBoxSearch.Text = null;
         }
     }
 }

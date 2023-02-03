@@ -34,15 +34,15 @@
             this.labelPath = new System.Windows.Forms.Label();
             this.buttonApply = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pictureBoxPreview3 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPreview2 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxPreview1 = new System.Windows.Forms.PictureBox();
+            this.textBoxSearch = new System.Windows.Forms.TextBox();
             this.buttonClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBrowseFiles
@@ -90,44 +90,49 @@
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
-            // pictureBox2
+            // pictureBoxPreview3
             // 
-            this.pictureBox2.Location = new System.Drawing.Point(1128, 22);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(128, 92);
-            this.pictureBox2.TabIndex = 6;
-            this.pictureBox2.TabStop = false;
+            this.pictureBoxPreview3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPreview3.Image")));
+            this.pictureBoxPreview3.Location = new System.Drawing.Point(1128, 22);
+            this.pictureBoxPreview3.Name = "pictureBoxPreview3";
+            this.pictureBoxPreview3.Size = new System.Drawing.Size(128, 92);
+            this.pictureBoxPreview3.TabIndex = 6;
+            this.pictureBoxPreview3.TabStop = false;
             // 
-            // pictureBox3
+            // pictureBoxPreview2
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(994, 22);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(128, 92);
-            this.pictureBox3.TabIndex = 7;
-            this.pictureBox3.TabStop = false;
+            this.pictureBoxPreview2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPreview2.Image")));
+            this.pictureBoxPreview2.Location = new System.Drawing.Point(994, 22);
+            this.pictureBoxPreview2.Name = "pictureBoxPreview2";
+            this.pictureBoxPreview2.Size = new System.Drawing.Size(128, 92);
+            this.pictureBoxPreview2.TabIndex = 7;
+            this.pictureBoxPreview2.TabStop = false;
             // 
-            // pictureBox4
+            // pictureBoxPreview1
             // 
-            this.pictureBox4.Location = new System.Drawing.Point(860, 22);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(128, 92);
-            this.pictureBox4.TabIndex = 8;
-            this.pictureBox4.TabStop = false;
+            this.pictureBoxPreview1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxPreview1.Image")));
+            this.pictureBoxPreview1.Location = new System.Drawing.Point(860, 22);
+            this.pictureBoxPreview1.Name = "pictureBoxPreview1";
+            this.pictureBoxPreview1.Size = new System.Drawing.Size(128, 92);
+            this.pictureBoxPreview1.TabIndex = 8;
+            this.pictureBoxPreview1.TabStop = false;
             // 
-            // textBox1
+            // textBoxSearch
             // 
-            this.textBox1.BackColor = System.Drawing.Color.Black;
-            this.textBox1.ForeColor = System.Drawing.Color.Lime;
-            this.textBox1.Location = new System.Drawing.Point(606, 22);
-            this.textBox1.MaxLength = 30;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.PlaceholderText = "Search";
-            this.textBox1.Size = new System.Drawing.Size(248, 23);
-            this.textBox1.TabIndex = 9;
+            this.textBoxSearch.BackColor = System.Drawing.Color.Black;
+            this.textBoxSearch.ForeColor = System.Drawing.Color.Lime;
+            this.textBoxSearch.Location = new System.Drawing.Point(606, 22);
+            this.textBoxSearch.MaxLength = 30;
+            this.textBoxSearch.Name = "textBoxSearch";
+            this.textBoxSearch.PlaceholderText = "Search";
+            this.textBoxSearch.Size = new System.Drawing.Size(248, 23);
+            this.textBoxSearch.TabIndex = 9;
+            this.textBoxSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxSearch_KeyDown);
             // 
             // buttonClear
             // 
             this.buttonClear.BackColor = System.Drawing.Color.OrangeRed;
+            this.buttonClear.Enabled = false;
             this.buttonClear.ForeColor = System.Drawing.Color.MintCream;
             this.buttonClear.Location = new System.Drawing.Point(606, 58);
             this.buttonClear.Name = "buttonClear";
@@ -135,6 +140,7 @@
             this.buttonClear.TabIndex = 10;
             this.buttonClear.Text = "Clear";
             this.buttonClear.UseVisualStyleBackColor = false;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
             // FormWallpaperChanger
             // 
@@ -143,10 +149,10 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(1268, 588);
             this.Controls.Add(this.buttonClear);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.pictureBox4);
-            this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.textBoxSearch);
+            this.Controls.Add(this.pictureBoxPreview1);
+            this.Controls.Add(this.pictureBoxPreview2);
+            this.Controls.Add(this.pictureBoxPreview3);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.labelPath);
@@ -159,9 +165,9 @@
             this.Text = "Wallpaper Changer";
             this.Load += new System.EventHandler(this.FormWallpaperChanger_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -174,10 +180,10 @@
         private Label labelPath;
         private Button buttonApply;
         private PictureBox pictureBox1;
-        private PictureBox pictureBox2;
-        private PictureBox pictureBox3;
-        private PictureBox pictureBox4;
-        private TextBox textBox1;
+        private PictureBox pictureBoxPreview3;
+        private PictureBox pictureBoxPreview2;
+        private PictureBox pictureBoxPreview1;
+        private TextBox textBoxSearch;
         private Button buttonClear;
     }
 }
