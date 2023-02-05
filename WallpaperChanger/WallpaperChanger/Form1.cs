@@ -54,37 +54,31 @@ namespace WallpaperChanger
             return images;
         }
 
-        void searchGoogle(string query)
+        Bitmap searchGoogle(string query, int index)
         {
             Debug.WriteLine($"query: {query}");
+
+            Debug.WriteLine($"index: {index}");
 
             var htmlDocument = new HtmlWeb().Load("https://www.google.com/search?q=+" + query + "&tbm=isch");
             var list = GetImagesInHTMLString(htmlDocument.Text);
 
-            for (int i = 0; i == 3; i++)
-            {
-                var str = list[i];
-                string pattern = @"(https://.*);";
-                Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
-                Match matches = rgx.Match(str);
-                string path = matches.Groups[1].Value;
-                var imageStream = HttpWebRequest.Create(path).GetResponse().GetResponseStream();
+            Debug.WriteLine($"list: {list}");              
 
-                switch (i)
-                {
-                    case 0:
-                        pictureBoxPreview1.Image = Image.FromStream(imageStream);
-                        break;
-                    case 1:
-                        pictureBoxPreview2.Image = Image.FromStream(imageStream);
-                        break;
-                    case 2:
-                        pictureBoxPreview3.Image = Image.FromStream(imageStream);
-                        break;
-                    default:
-                        break;
-                }
-            }
+            var str = list[index];
+            string pattern = @"(https://.*);";
+            Regex rgx = new Regex(pattern, RegexOptions.IgnoreCase);
+            Match matches = rgx.Match(str);
+            string path = matches.Groups[index].Value;
+
+            if (path == null) return new Bitmap(Stream.Null);
+
+            var imageStream = WebRequest.Create(path).GetResponse().GetResponseStream();
+
+            Debug.WriteLine($"str: {str}");
+            Debug.WriteLine($"imageStream: {imageStream}");                
+
+            return new Bitmap(Image.FromStream(imageStream));
         }
 
         private void buttonBrowseFiles_Click(object sender, EventArgs e)
@@ -168,7 +162,9 @@ namespace WallpaperChanger
         {
             if (e.KeyData == Keys.Enter)
             {
-                searchGoogle(textBoxSearch.Text);
+                pictureBoxPreview1.Image = searchGoogle(textBoxSearch.Text, 0);
+                pictureBoxPreview2.Image = searchGoogle(textBoxSearch.Text, 1);
+                //pictureBoxPreview3.Image = searchGoogle(textBoxSearch.Text, 2);
                 buttonClear.Enabled = true;
                 MessageBox.Show("Pressed enter.");
             }
